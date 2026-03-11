@@ -6,15 +6,14 @@ Document capturing product insights, user pain points, and strategic ideas for `
 
 ## User Pain Points (from Apache Iggy Discord)
 
-| User | Use Case | Pain Point | Lab Opportunity |
-|------|----------|------------|-----------------|
-| kaizenmizu | Rust trading terminal, backend→client streaming | "Still exploring" - discovery friction | Visual "does it fit?" decision helper |
-| alquemir | Audit trail for user CRUD actions | "CQRS is too complicated" - pattern complexity | Show ONE pattern clearly before abstraction |
-| Aditya | Contributor, Rust dev | Wants to contribute, needs codebase understanding | Internals visualization as onboarding |
-| Krishna Vishal | ML→Systems transition, turso contributor | "Where work is needed?" - entry point ambiguity | Codebase map with entry points |
-| char8 | Potential adopter | "Just discovered Iggy today" - first touchpoint is blog | Interactive blog post (the lab itself) |
-| sawan | OpenSearch user | Connector gap - no OpenSearch support | Connector coverage visualization |
-| Luiz | Evaluating Iggy | Kafka compatibility FAQ | "Iggy vs Kafka: same task, different interface" |
+**Target: Engineers evaluating message queues for their organizations.**
+
+| Use Case | Pain Point | Lab Opportunity |
+|------|------------|-----------------|
+| Rust trading terminal, backend→client streaming | "Still exploring" - discovery friction | Visual "does it fit?" decision in 30s |
+| Audit trail for user CRUD actions | "CQRS is too complicated" - pattern complexity | Show data flow, not pattern names |
+| Potential adopter | "Just discovered Iggy" - first touchpoint is blog | Interactive blog post (the lab itself) |
+| Evaluating Iggy vs Kafka | "Kafka compatibility?" - wants migration story | Side-by-side interface comparison |
 
 ### Insight: The "Still Exploring" Problem
 Users land on Iggy and spend days "exploring" before they can make a decision. A visual lab that shows ONE complete message journey in 30 seconds accelerates the "does this fit my use case?" decision by 100x.
@@ -23,38 +22,12 @@ Users land on Iggy and spend days "exploring" before they can make a decision. A
 Developers don't want CQRS, event sourcing, or CDC as abstract concepts. They want to see data flow. The lab should never say "this demonstrates CQRS" — it should show data moving and let the pattern emerge from observation.
 
 ### Insight: The Kafka Question Is the FAQ
-spetz: "our fav question" — Kafka compatibility keeps coming up because users want migration safety.
+Kafka compatibility keeps coming up because users want migration safety.
 
 The answer (no protocol compat, easy interface migration) is correct but invisible. A visual lab that shows "Same task: Iggy vs Kafka interface" answers the question in 30 seconds without docs.
 
 ### Insight: Blog Posts Are the Funnel
-char8: "just discovered Iggy today... love the blogs"
-
 First touchpoint is content, not code. The visual lab is essentially an interactive blog post. It should feel like reading a great technical essay, but with "run it yourself" buttons.
-
-### Insight: Contributor Entry Points Are Undocumented
-Krishna Vishal (top 10 turso contributor) asks "where work is needed?" and gets pointed to a specific branch with caveats: "issues are extremely vague", "code is extremely ugly".
-
-High-quality contributors struggle to find entry points. A visual map of "start here, go here, here's what this module does" would accelerate contribution velocity.
-
-### Insight: Connector Coverage Gaps Are Visible to Newcomers
-sawan (first day) immediately noticed OpenSearch gap.
-
-Newcomers see gaps faster than maintainers because they arrive with fresh context from other ecosystems. The lab could surface "connector coverage map" as a contributor recruitment tool.
-
-### Insight: Language Wrapper Maintenance Is the Hidden Tax
-Luiz: "One challenge on having many language wrappers is maintaining it."
-
-Every SDK is a liability. Iggy's approach (build own SDKs with community help) is necessary but costly. The lab should show SDK usage patterns, reducing support burden by being the canonical "how to use Iggy" reference.
-
-### Insight: Architecture in Flux Is an Opportunity
-Iggy is mid-migration: tokio → compio, thread-per-core architecture like Scylla/Redpanda.
-
-This creates:
-- Pain: docs are outdated, code is "extremely ugly"
-- Opportunity: contributors who learn it now will understand the new architecture before anyone else
-
-The visual lab can document the migration itself — "before and after" architecture comparison.
 
 ---
 
@@ -63,7 +36,7 @@ The visual lab can document the migration itself — "before and after" architec
 ### Insight: Adopters First, Contributors Second
 The primary user is the engineer evaluating Iggy for their use case. Contributors are a side benefit.
 
-If the visualization helps someone decide "Iggy fits my trading terminal" (kaizenmizu), that's the win. If it happens to also help a contributor understand the codebase, that's bonus — not the goal.
+If the visualization helps someone decide "Iggy fits my use case", that's the win. If it happens to also help a contributor understand the codebase, that's bonus — not the goal.
 
 **Shreyas Doshi principle:** Solve the user's problem, not the contributor's problem. Contributors are users of the codebase. Adopters are users of the product.
 
@@ -130,44 +103,41 @@ Show the full connector path, not just broker internals.
 
 **Why this matters:** Connectors are how real users interact with MQs. Pure broker visualization is academic; connector visualization is practical.
 
-### P5: Interview Prep Mode
-"Explain what happens when a producer sends a message" — common interview question. Lab becomes study tool.
-
-**Why this matters:** Distributes the project through interview prep channels, not just MQ communities.
-
-### P6: Kafka Migration Guide (Interactive)
+### P5: Kafka Migration Guide (Interactive)
 Show the same task (produce, consume, offset commit) in Iggy vs Kafka side by side.
 
 **Why this matters:** This is the #1 FAQ. Answer it visually. "Iggy doesn't support Kafka protocol, but here's what migration looks like."
 
-### P7: Connector Coverage Map
-Visualize which connectors exist, which are in progress, which are gaps.
-
-**Why this matters:** sawan noticed OpenSearch gap immediately. Surface this for contributors.
-
 ---
 
-## Content Ideas (Fieldbook Chapters)
+## Content Ideas (Web Pages + Visualizations)
 
-### Ch1: Fundamentals
-- What is a partition (visualized)
-- Append-only log (animated)
-- Consumer offsets (interactive)
+### Page: Message Journey
+Interactive visualization of one message flowing through Iggy in slow motion — every step rendered, visible in your browser.
 
-### Ch2: Iggy Internals
-- Message journey (the core)
-- Partition storage format
-- io_uring explained (why it matters)
-- QUIC vs TCP (transport decision)
+- Watch it flow through partition assignment, storage, consumer poll
+- Every step shown as a badge with details like "partition", "offset", "index updated"
 
-### Ch3: Kafka Comparison
-- Architecture differences (side by side)
-- When to use which (decision tree)
+### Page: Side-by-Side Comparison
+Compare Iggy vs Kafka on the same message, rendered in parallel.
 
-### Ch4: Interactive Labs
-- Lab: Backpressure
-- Lab: Replay
-- Lab: Partition Rebalance
+- See what happens differently
+- Decide "Iggy or Kafka?" faster than reading docs
+
+### Page: Connector Journey
+Postgres CDC → Iggy → Sink (animated)
+
+- Show the full connector path, not just broker internals
+- Connectors are how real users interact with MQs
+
+### Page: Failure Modes Lab
+Interactive scenarios: backpressure, replay, partition rebalance
+
+- See what happens when things go wrong
+- Build production confidence
+
+### Page: Decision Tree
+"When to use which" — visual guide for choosing between Iggy, Kafka, and other brokers
 
 ---
 
@@ -185,6 +155,18 @@ Visualize which connectors exist, which are in progress, which are gaps.
 
 ### Insight: Name Should Promise Transformation
 Not "learn about message queues" but "see what you couldn't see before."
+
+---
+
+## What We're NOT Building (v0.1)
+
+These are out of scope for v0.1:
+
+- Contributor onboarding / codebase maps
+- Interview prep mode
+- Connector coverage gap analysis
+- SDK documentation
+- Architecture deep-dives (io_uring, compio migration)
 
 ---
 
